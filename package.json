@@ -1,0 +1,20 @@
+{
+  "name": "@limm/uni-pushy-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gc": "git add -A && git-cz && git pull && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SunSeekerX/uni-pushy-client.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SunSeekerX/uni-pushy-client/issues"
+  },
+  "homepage": "https://github.com/SunSeekerX/uni-pushy-client#readme"
+}
