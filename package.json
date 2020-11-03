@@ -1,10 +1,12 @@
 {
   "name": "@limm/uni-pushy-client",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "gc": "git add -A && git-cz && git pull && git push"
+    "build": "webpack --config webpack.config.js",
+    "gc": "git add -A && git-cz && git pull && git push",
+    "pb": "npm publish --access public"
   },
   "repository": {
     "type": "git",
