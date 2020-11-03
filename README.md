@@ -1,16 +1,8 @@
+# uni-pushy-client
+
 ## 发布订阅
 
-### onInit- 初始化事件
-
-回调参数 null
-
-
-
-### onStartGetUpdate - 开始检查更新
-
-
-
-### onNoUpdate - 暂无更新
+wip
 
 
 
