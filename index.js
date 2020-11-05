@@ -318,6 +318,11 @@ export default class Pushy {
     const res = await this.onRequestUpdate()
     // 关闭正在更新
     this.state.isGettingUpdate = false
+    // 日志提示
+    this._config.log &&
+      console.log('Uni-pushy：接口响应 >>>', res.response)
+    this._config.log &&
+      console.log('Uni-pushy：本地版本 >>>', await this.getInfo())
     // 根据 statusCode 处理结果
     switch (res.statusCode) {
       case 251:
@@ -336,11 +341,6 @@ export default class Pushy {
         // 253：暂无更新
         // 发布 onNoUpdate - 暂无更新
         this.emit('onNoUpdate')
-        this._config.log &&
-          console.log('Uni-pushy：暂无新版本，接口响应 >>>', res.response)
-        this._config.log &&
-          console.log('Uni-pushy：暂无新版本，本地版本 >>>', res.info)
-        // resolve(false)
         return Promise.resolve(res)
       case 254:
         // 254：请求成功，但返回失败
