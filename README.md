@@ -85,7 +85,7 @@ const res = await pushy.getInfo()
 
 **pushy.getInfo() : Promise<result>**
 
-该方法指挥 **resolve**，返回属性
+该方法只会 **resolve**，返回属性
 
 ```javascript
 {
