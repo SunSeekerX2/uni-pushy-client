@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "gc": "git add -A && git-cz && git pull && git push",
-    "pb": "npm publish --access public"
+    "pb": "npm publish --access public",
+    "lint:prettier": "prettier --write --loglevel warn \"./**/*.{js,json,tsx,css,less,scss,vue,html,md}\""
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/SunSeekerX/uni-pushy-client/issues"
   },
-  "homepage": "https://github.com/SunSeekerX/uni-pushy-client#readme"
+  "homepage": "https://github.com/SunSeekerX/uni-pushy-client#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.1",
+    "prettier": "2.1.2"
+  }
 }

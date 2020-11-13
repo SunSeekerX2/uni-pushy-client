@@ -115,7 +115,7 @@ export default class Pushy {
     //   return false
     // }
     // 遍历 event 值对应的缓存列表，依次执行 fn
-    _this.list[event].forEach(fn => {
+    _this.list[event].forEach((fn) => {
       fn.apply(_this, arguments)
     })
     return _this
@@ -128,14 +128,7 @@ export default class Pushy {
    */
   setConfig(options) {
     // 公开可重写的设置key
-    const _publicSettings = [
-      'projectId',
-      'update',
-      'updateUrl',
-      'log',
-      'mainColor',
-      'logo',
-    ]
+    const _publicSettings = ['projectId', 'update', 'updateUrl', 'log', 'mainColor', 'logo']
     // 合并传入的设置对象，如果传入了非公开设置的key会被丢弃
     const _workSetting = {}
     for (const item of Object.keys(options)) {
@@ -160,7 +153,7 @@ export default class Pushy {
    * @return { Promise<Boolean> }
    */
   init() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       // 获取原生版本参数
       const { appid, version, versionCode } = plus.runtime
       // appid
@@ -173,7 +166,7 @@ export default class Pushy {
       this.systemInfo = uni.getSystemInfoSync()
 
       // 读取 wgt 版本号
-      plus.runtime.getProperty(appid, res => {
+      plus.runtime.getProperty(appid, (res) => {
         const { version, versionCode } = res
         this.wgtVersion = version
         this.wgtVersionCode = Number(versionCode)
@@ -189,10 +182,10 @@ export default class Pushy {
         // }
         // 获取设备信息
         plus.device.getInfo({
-          success: deviceInfo => {
+          success: (deviceInfo) => {
             this.systemInfo.uuid = deviceInfo.uuid
           },
-          fail: e => {
+          fail: (e) => {
             console.error(e)
           },
           complete: () => {
@@ -319,10 +312,8 @@ export default class Pushy {
     // 关闭正在更新
     this.state.isGettingUpdate = false
     // 日志提示
-    this._config.log &&
-      console.log('Uni-pushy：接口响应 >>>', res.response)
-    this._config.log &&
-      console.log('Uni-pushy：本地版本 >>>', await this.getInfo())
+    this._config.log && console.log('Uni-pushy：接口响应 >>>', res.response)
+    this._config.log && console.log('Uni-pushy：本地版本 >>>', await this.getInfo())
     // 根据 statusCode 处理结果
     switch (res.statusCode) {
       case 251:
@@ -344,13 +335,11 @@ export default class Pushy {
         return Promise.resolve(res)
       case 254:
         // 254：请求成功，但返回失败
-        this._config.log &&
-          console.log('Uni - pushy：success: false >>>>>>>>>', res.response)
+        this._config.log && console.log('Uni - pushy：success: false >>>>>>>>>', res.response)
         return Promise.resolve(res)
       case 500:
         // 500：请求失败，查看返回对象 message 获取错误详情描述 error：原生错误对象
-        this._config.log &&
-          console.log('Uni - pushy：500: false >>>>>>>>>', res.error)
+        this._config.log && console.log('Uni - pushy：500: false >>>>>>>>>', res.error)
         return Promise.resolve(res)
       default:
         return Promise.resolve({
@@ -426,17 +415,11 @@ export default class Pushy {
    * @return { Promise<object> } 包装的响应对象
    */
   async onRequestUpdate() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const { platform } = this.systemInfo
       const { updateUrl, projectId } = this._config
 
-      const {
-        wgtVersion,
-        wgtVersionCode,
-        nativeVersion,
-        nativeVersionCode,
-        systemInfo,
-      } = this
+      const { wgtVersion, wgtVersionCode, nativeVersion, nativeVersionCode, systemInfo } = this
 
       uni.request({
         url: `${updateUrl}/api/update`,
@@ -450,7 +433,7 @@ export default class Pushy {
           platform,
           systemInfo,
         },
-        success: res => {
+        success: (res) => {
           const data = res.data
           if (data.success) {
             const { wgt, native } = data.data
@@ -487,7 +470,7 @@ export default class Pushy {
             })
           }
         },
-        fail: e => {
+        fail: (e) => {
           resolve({
             statusCode: 500,
             message: e.message,
@@ -531,16 +514,16 @@ export default class Pushy {
               this.state.isSlientUpdated = true
               this._config.log && console.log('Uni-pushy：静默更新完成 >>>')
             },
-            e => {
+            (e) => {
               this.state.isSlientUpdating = false
               plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
-            },
+            }
           )
         } else {
           this.state.isSlientUpdating = false
           // toast('静默更新文件下载失败...')
         }
-      },
+      }
     )
 
     // 启动下载对象
@@ -556,9 +539,7 @@ export default class Pushy {
         case 2:
           // 已连接到服务器
           this._config.log &&
-            console.log(
-              'Uni-pushy：下载任务网络连接已建立，服务器返回响应，准备传输数据内容。',
-            )
+            console.log('Uni-pushy：下载任务网络连接已建立，服务器返回响应，准备传输数据内容。')
           break
         case 3:
           // 下载中...
@@ -616,7 +597,7 @@ const getDownload = function (res) {
           function (e) {
             popupObj.cancel()
             plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
-          },
+          }
         )
       } else {
         popupObj.change({
@@ -625,7 +606,7 @@ const getDownload = function (res) {
           progress: false,
         })
       }
-    },
+    }
   )
   dtask.start()
   dtask.addEventListener('statechanged', function (task, status) {
@@ -872,7 +853,7 @@ function updatePopup(res, callback) {
     {
       top: '40px',
       height: popupViewHeight - 40 + 'px',
-    },
+    }
   )
   // 绘制底边按钮
   popupView.drawRect(
@@ -886,7 +867,7 @@ function updatePopup(res, callback) {
       left: viewContentPadding + 'px',
       width: (viewContentWidth - viewContentPadding) / 2 + 'px',
       height: '30px',
-    },
+    }
   )
   // 绘制底边按钮
   popupView.drawRect(
@@ -896,13 +877,10 @@ function updatePopup(res, callback) {
     },
     {
       bottom: viewContentPadding + 'px',
-      left:
-        (viewContentWidth - viewContentPadding) / 2 +
-        viewContentPadding * 2 +
-        'px',
+      left: (viewContentWidth - viewContentPadding) / 2 + viewContentPadding * 2 + 'px',
       width: (viewContentWidth - viewContentPadding) / 2 + 'px',
       height: '30px',
-    },
+    }
   )
   popupViewContentList.push({
     tag: 'font',
@@ -933,10 +911,7 @@ function updatePopup(res, callback) {
     },
     position: {
       bottom: viewContentPadding + 'px',
-      left:
-        (viewContentWidth - viewContentPadding) / 2 +
-        viewContentPadding * 2 +
-        'px',
+      left: (viewContentWidth - viewContentPadding) / 2 + viewContentPadding * 2 + 'px',
       width: (viewContentWidth - viewContentPadding) / 2 + 'px',
       height: '30px',
     },
@@ -1087,10 +1062,7 @@ function downloadPopupDrawing(data) {
         },
         position: {
           bottom: viewContentPadding + 'px',
-          left:
-            (viewContentWidth - viewContentPadding) / 2 +
-            viewContentPadding * 2 +
-            'px',
+          left: (viewContentWidth - viewContentPadding) / 2 + viewContentPadding * 2 + 'px',
           width: (viewContentWidth - viewContentPadding) / 2 + 'px',
           height: '30px',
         },
@@ -1124,10 +1096,7 @@ function downloadPopupDrawing(data) {
         },
         position: {
           bottom: viewContentPadding + 'px',
-          left:
-            (viewContentWidth - viewContentPadding) / 2 +
-            viewContentPadding * 2 +
-            'px',
+          left: (viewContentWidth - viewContentPadding) / 2 + viewContentPadding * 2 + 'px',
           width: (viewContentWidth - viewContentPadding) / 2 + 'px',
           height: '30px',
         },
@@ -1193,8 +1162,7 @@ function downloadPopup(data) {
   let popupView = new plus.nativeObj.View('popupView', {
     //创建底部图标菜单
     tag: 'rect',
-    top:
-      (popupViewData.screenHeight - popupViewData.popupViewHeight) / 2 + 'px',
+    top: (popupViewData.screenHeight - popupViewData.popupViewHeight) / 2 + 'px',
     left: '15%',
     height: popupViewData.popupViewHeight + 'px',
     width: '70%',
@@ -1223,8 +1191,7 @@ function downloadPopup(data) {
           position: {
             top: popupViewData.viewContentPadding * 4 + 60 + 'px',
             left: popupViewData.viewContentPadding + 'px',
-            width:
-              popupViewData.viewContentWidth * (res.progressValue / 100) + 'px',
+            width: popupViewData.viewContentWidth * (res.progressValue / 100) + 'px',
             height: '8px',
           },
         })
@@ -1273,8 +1240,8 @@ function downloadPopup(data) {
               progressTip: progressTip,
               contentText: contentText,
             },
-            res,
-          ),
+            res
+          )
         )
         let newElement = []
         popupViewData.elementList.map((item, index) => {
@@ -1291,9 +1258,7 @@ function downloadPopup(data) {
         progressElement = newElement.concat(progressElement)
         popupView.setStyle({
           tag: 'rect',
-          top:
-            (popupViewData.screenHeight - popupViewData.popupViewHeight) / 2 +
-            'px',
+          top: (popupViewData.screenHeight - popupViewData.popupViewHeight) / 2 + 'px',
           left: '15%',
           height: popupViewData.popupViewHeight + 'px',
           width: '70%',
@@ -1309,26 +1274,19 @@ function downloadPopup(data) {
     },
   }
   popupView.addEventListener('click', function (e) {
-    let maxTop =
-      popupViewData.popupViewHeight - popupViewData.viewContentPadding
-    let maxLeft =
-      popupViewData.popupViewWidth - popupViewData.viewContentPadding
+    let maxTop = popupViewData.popupViewHeight - popupViewData.viewContentPadding
+    let maxLeft = popupViewData.popupViewWidth - popupViewData.viewContentPadding
     if (e.clientY > maxTop - 40 && e.clientY < maxTop) {
       if (buttonNum == 1) {
         // 单按钮
-        if (
-          e.clientX > popupViewData.viewContentPadding &&
-          e.clientX < maxLeft
-        ) {
+        if (e.clientX > popupViewData.viewContentPadding && e.clientX < maxLeft) {
           maskLayer.hide()
           popupView.hide()
           callbackData.reboot()
         }
       } else if (buttonNum == 2) {
         // 双按钮
-        let buttonWidth =
-          (popupViewData.viewContentWidth - popupViewData.viewContentPadding) /
-          2
+        let buttonWidth = (popupViewData.viewContentWidth - popupViewData.viewContentPadding) / 2
         if (
           e.clientX > popupViewData.viewContentPadding &&
           e.clientX < maxLeft - buttonWidth - popupViewData.viewContentPadding
@@ -1362,7 +1320,7 @@ function toast(msg, options) {
         title: msg,
         duration: 2000,
       },
-      options,
-    ),
+      options
+    )
   )
 }

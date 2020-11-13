@@ -6,8 +6,6 @@
 
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom: 33%;" />
 
-
-
 ## 快速上手
 
 ### **安装**
@@ -16,7 +14,7 @@
 npm i @limm/uni-pushy-client
 ```
 
-### **使用** 
+### **使用**
 
 `${app/src/utils/pushy/index.js}`
 
@@ -24,24 +22,23 @@ npm i @limm/uni-pushy-client
 import Pushy from '@limm/uni-pushy-client'
 
 export default new Pushy({
-	// 项目id
-	projectId: 'c187ac54ddcdef8fdba2558c30da62e5',
-	// 更新地址
-	updateUrl: 'https://api.uni-pushy.yoouu.cn',
-	// 主题色
-	mainColor: '722ed1', 
-	// logo
-	logo: '/static/images/update/ic_ar.png',
+  // 项目id
+  projectId: 'c187ac54ddcdef8fdba2558c30da62e5',
+  // 更新地址
+  updateUrl: 'https://api.uni-pushy.yoouu.cn',
+  // 主题色
+  mainColor: '722ed1',
+  // logo
+  logo: '/static/images/update/ic_ar.png',
   // 是否打开检查更新
   update: true,
 })
-
 ```
 
 **constructor(options)**
 
-- `projectId` <String> 项目 id 默认: `''`  `uni-pushy-admin` 创建的项目 `id`
-- `updateUrl` <String>  默认: `''`  `uni-pushy-server` 部署可访问的地址
+- `projectId` <String> 项目 id 默认: `''` `uni-pushy-admin` 创建的项目 `id`
+- `updateUrl` <String> 默认: `''` `uni-pushy-server` 部署可访问的地址
 - `mainColor` <String> 项目 id 默认: `'FF5B78'`
 - `logo` <String> 弹窗图标 url `/` 相当于**项目根目录**（**cli** 创建的项目为 **src**） 默认: `''`
 - `update` <Boolean> 是否打开检查更新 默认：`true`
@@ -58,13 +55,13 @@ const res = await pushy.getUpdate()
 该方法只会 **resolve**，参数为包装过后的结果对象
 
 - `statusCode` <Number> 状态码，执行该方法之后的结果主要根据状态码进行判断
-  - `251` 需要更新原生版本 附带 `data`、`response` 
-  - `252` 需要更新wgt版本 附带：`message`、`data`、 `response`
-  - `253` 暂无更新 附带：`message`、`response` 
+  - `251` 需要更新原生版本 附带 `data`、`response`
+  - `252` 需要更新 wgt 版本 附带：`message`、`data`、 `response`
+  - `253` 暂无更新 附带：`message`、`response`
   - `254` 请求成功，但接口响应返回失败 附带： `message`， `response`
   - `451` 更新被关闭，用户手动配置关闭了 附带： `message`
   - `452` 用户未配置更新地址 附带： `message`
-  - `453` 无项目ID或项目ID不正确 附带： `message`
+  - `453` 无项目 ID 或项目 ID 不正确 附带： `message`
   - `473` 正在检查更新 附带： `message`
   - `474` 正在静默更新 附带： `message`
   - `475` 已经静默更新完成，需要重启 App 生效 附带： `message`
@@ -74,8 +71,6 @@ const res = await pushy.getUpdate()
 - `data` <Object> native 或者 wgt 包信息
 - `response` <Object> 原生响应对象
 - `error` <Error> 原生错误对象
-
-
 
 ### **获取信息 - getInfo()**
 
@@ -89,7 +84,7 @@ const res = await pushy.getInfo()
 
 ```javascript
 {
-  // 
+  //
 	"appid": "__UNI__70FC0DB",
   // 原生（基座） 版本名
 	"nativeVersion": "1.3.0",
@@ -154,8 +149,6 @@ const res = await pushy.getInfo()
 
 ```
 
-
-
 ## 最佳实践
 
 全局只创建一个 `Pushy` 对象，之后 App 的更新都使用该对象来完成。例如我们的项目：
@@ -167,21 +160,18 @@ import config from '@/config/index'
 import Pushy from '@limm/uni-pushy-client'
 
 export default new Pushy({
-	// 项目id
-	projectId: config.get('UPDATE_PROJECT_ID'),
-	// 更新地址
-	updateUrl: config.get('UPDATE_BASE_API'),
-	// 是否打开log
-	log: config.get('UPDATE_DEBUG'),
-	// 主题色
-	mainColor: '722ed1',
-	// logo
-	logo: '/static/images/update/ic_ar.png'
+  // 项目id
+  projectId: config.get('UPDATE_PROJECT_ID'),
+  // 更新地址
+  updateUrl: config.get('UPDATE_BASE_API'),
+  // 是否打开log
+  log: config.get('UPDATE_DEBUG'),
+  // 主题色
+  mainColor: '722ed1',
+  // logo
+  logo: '/static/images/update/ic_ar.png',
 })
-
 ```
-
-
 
 在 `App.vue` 的 `onLaunch` 中检查更新一次即可。就是这么简单。
 
@@ -219,13 +209,9 @@ export default {
 
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom:50%;" />
 
-
-
 ## 发布订阅
 
 wip
-
-
 
 ## 更新类型
 
@@ -239,4 +225,4 @@ wip
 
 **普通更新**
 
-用户感知，打开app，或者检查更新需要用户同意更新后，下载更新自动安装，安装完成后提示用户，软重启之后生效。
+用户感知，打开 app，或者检查更新需要用户同意更新后，下载更新自动安装，安装完成后提示用户，软重启之后生效。
