@@ -82,69 +82,69 @@ const res = await pushy.getInfo()
 
 该方法只会 **resolve**，返回属性
 
-```json
-{
+```javascript
+const res = {
   //
-  "appid": "__UNI__70FC0DB",
+  appid: '__UNI__70FC0DB',
   // 原生（基座） 版本名
-  "nativeVersion": "1.3.0",
+  nativeVersion: '1.3.0',
   // 原生（基座） 版本号
-  "nativeVersionCode": 130,
+  nativeVersionCode: 130,
   // wgt 版本名
-  "wgtVersion": "1.3.0",
+  wgtVersion: '1.3.0',
   // wgt 版本号
-  "wgtVersionCode": 130,
+  wgtVersionCode: 130,
   // uni.getSystemInfoSync() 返回一致
-  "systemInfo": {
-    "errMsg": "getSystemInfoSync:ok",
-    "brand": "OPPO",
-    "model": "PCLM10",
-    "pixelRatio": 3,
-    "screenWidth": 360,
-    "screenHeight": 640,
-    "windowWidth": 360,
-    "windowHeight": 640,
-    "statusBarHeight": 24,
-    "language": "zh-CN",
-    "system": "7.1.2",
-    "version": "1.9.9.80492",
-    "fontSizeSetting": "",
-    "platform": "android",
-    "SDKVersion": "",
-    "windowTop": 0,
-    "windowBottom": 0,
-    "safeArea": {
-      "left": 0,
-      "right": 360,
-      "top": 24,
-      "bottom": 640,
-      "width": 360,
-      "height": 616
+  systemInfo: {
+    errMsg: 'getSystemInfoSync:ok',
+    brand: 'OPPO',
+    model: 'PCLM10',
+    pixelRatio: 3,
+    screenWidth: 360,
+    screenHeight: 640,
+    windowWidth: 360,
+    windowHeight: 640,
+    statusBarHeight: 24,
+    language: 'zh-CN',
+    system: '7.1.2',
+    version: '1.9.9.80492',
+    fontSizeSetting: '',
+    platform: 'android',
+    SDKVersion: '',
+    windowTop: 0,
+    windowBottom: 0,
+    safeArea: {
+      left: 0,
+      right: 360,
+      top: 24,
+      bottom: 640,
+      width: 360,
+      height: 616,
     },
-    "safeAreaInsets": {
-      "top": 24,
-      "right": 0,
-      "bottom": 0,
-      "left": 0
+    safeAreaInsets: {
+      top: 24,
+      right: 0,
+      bottom: 0,
+      left: 0,
     },
-    "uuid": "865166023573440"
+    uuid: '865166023573440',
   },
   // 个人配置
-  "_config": {
-    "projectId": "",
-    "update": true,
-    "updateUrl": "http://10.0.0.3:8081",
-    "log": false,
-    "mainColor": "722ed1",
-    "logo": "/static/images/update/ic_ar.png"
+  _config: {
+    projectId: '',
+    update: true,
+    updateUrl: 'http://10.0.0.3:8081',
+    log: false,
+    mainColor: '722ed1',
+    logo: '/static/images/update/ic_ar.png',
   },
   // 生效的配置
-  "_workSetting": {
-    "updateUrl": "http://10.0.0.3:8081",
-    "log": false,
-    "mainColor": "722ed1",
-    "logo": "/static/images/update/ic_ar.png"
-  }
+  _workSetting: {
+    updateUrl: 'http://10.0.0.3:8081',
+    log: false,
+    mainColor: '722ed1',
+    logo: '/static/images/update/ic_ar.png',
+  },
 }
 ```
 
