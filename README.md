@@ -2,11 +2,21 @@
 
 # 简介
 
+<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom:50%;" />
+
 **Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。后续开放自定义处理更新逻辑~
 
 热更新适用于 uni-app 开发的 Android，Ios 端应用。支持 nvue， 如果不改动原生配置可以一直用热更新更新。
 
-<img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom: 33%;" />
+**Github**：**[uni-pushy-client](https://github.com/SunSeekerX/uni-pushy-client)**
+
+**配套后端**：**[uni-pushy-server](https://github.com/SunSeekerX/uni-pushy-server)**
+
+**配套前端**：**[uni-pushy-admin](https://github.com/SunSeekerX/uni-pushy-admin)**
+
+![](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20210219232321.png)
+
+![](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20210219232048.png)
 
 # 快速上手
 
@@ -283,7 +293,7 @@ export default {
 
 如果有更新就会弹出更新框了，当然这是后台配置的。
 
-<img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom:50%;" />
+<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom:50%;" />
 
 ## 原生包
 
