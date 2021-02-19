@@ -4,11 +4,15 @@
 
 **Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。后续开放自定义处理更新逻辑~
 
+热更新适用于 uni-app 开发的 Android，Ios 端应用。支持 nvue， 如果不改动原生配置可以一直用热更新更新。
+
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom: 33%;" />
 
 ## 快速上手
 
 ### **安装**
+
+在你的 uni-app 项目根目录下执行：
 
 ```bash
 npm i @limm/uni-pushy-client
@@ -37,14 +41,20 @@ export default new Pushy({
 
 **constructor(options)**
 
-- `projectId` <String> 项目 id 默认: `''` `uni-pushy-admin` 创建的项目 `id`
-- `updateUrl` <String> 默认: `''` `uni-pushy-server` 部署可访问的地址
-- `mainColor` <String> 项目 id 默认: `'FF5B78'`
+- `projectId` <String> `uni-pushy-admin` 创建的项目 `id` 默认: `''`
+- `updateUrl` <String> `uni-pushy-server` 部署可访问的地址 默认: `''`
+- `mainColor` <String> 主题色 默认: `'FF5B78'`
 - `logo` <String> 弹窗图标 url `/` 相当于**项目根目录**（**cli** 创建的项目为 **src**） 默认: `''`
 - `update` <Boolean> 是否打开检查更新 默认：`true`
 - 返回：更新对象
 
-### **检查更新 - getUpdate()**
+## Api
+
+### **检查更新 - getUpdate(manual)**
+
+**该方法通过按钮点击调用需要做防抖处理！**
+
+- `manual` <Boolean | null> 是否手动触发
 
 ```javascript
 const res = await pushy.getUpdate()
@@ -64,9 +74,10 @@ const res = await pushy.getUpdate()
   - `453` 无项目 ID 或项目 ID 不正确 附带： `message`
   - `473` 正在检查更新 附带： `message`
   - `474` 正在静默更新 附带： `message`
-  - `475` 已经静默更新完成，需要重启 App 生效 附带： `message`
+  - `475` 已经更新完成，需要重启 App 生效 附带： `message`
+  - `476` 正在更新中... 附带：`message`
   - `500` 请求失败 附带： `message`、`error`
-  - `505` 占位，应该不会返回这个
+  - `505` 未知错误
 - `message` <String> 信息描述
 - `data` <Object> native 或者 wgt 包信息
 - `response` <Object> 原生响应对象
@@ -206,9 +217,27 @@ export default {
 
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom:50%;" />
 
+### 原生包
+
+首先基于现在的版本打包，选择发行 > 原生 app - 云打包 > 选择你需要的平台，打出一个原生包。打包完成上传至 uni-pushy 后台管理。
+
+### 热更新包
+
+修改 `manifest.json` 的应用版本名称，和应用版本号（版本号只能前进，相对应的版本名也需要），增加版本号，选择发行 > 原生 app - 制作应用 wgt 包 > 打出资源包，上传至 uni-pushy 后台管理。
+
+**wgt 资源一定依赖某个原生资源！**
+
 ## 发布订阅
 
 wip
+
+## Todo
+
+- 基于发布订阅的事件更新机制，用户可以随意定制界面
+- 国际化支持
+- 清除更新的缓存
+
+## 示例项目
 
 ## 更新类型
 

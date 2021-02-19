@@ -1,0 +1,197 @@
+<!--
+ * @name: 
+ * @author: SunSeekerX
+ * @Date: 2021-02-18 18:01:53
+ * @LastEditors: SunSeekerX
+ * @LastEditTime: 2021-02-19 17:54:37
+-->
+
+<template>
+  <view class="page">
+    <!-- 信息 -->
+    <view>
+      <view class="item">
+        <view class="label">原生版本：</view> <view class="value">{{ appInfo.nativeVersion }}</view>
+      </view>
+      <view class="item">
+        <text class="label">原生版本号：</text>
+        <text class="value">{{ appInfo.nativeVersionCode }}</text>
+      </view>
+
+      <view class="item">
+        <text class="label">wgt 版本：</text> <text class="value">{{ appInfo.wgtVersion }}</text>
+      </view>
+      <view class="item">
+        <text class="label">wgt 版本号：</text>
+        <text class="value">{{ appInfo.wgtVersionCode }}</text>
+      </view>
+    </view>
+
+    <button @click="onGetInfo" class="btn" style="background-color: #999999">获取信息</button>
+    <!-- <button @click="() => onGetUpdate()" class="btn" style="background-color: #dd524d"
+      >检查更新</button
+    > -->
+    <button @click="() => onGetUpdate(true)" class="btn" style="background-color: #dd524d"
+      >检查更新(手动)</button
+    >
+
+    <!-- <view class="info-board" style="color: #007AFF;">
+      {{ appInfoString }}
+    </view> -->
+
+    <scroll-view class="info-board" scroll-x="true">
+      <y-json-view :json="appInfoJson" />
+    </scroll-view>
+
+    <u-popup v-model="state.isShowPopup" mode="center" :closeable="true">
+      <view class="popup">
+        <view>发现新版本：{{ apiInfo.version }}</view>
+        
+        <view>更新日志</view>
+        <view>{{ apiInfo.changelog }}</view>
+        
+        <view class="popup-button">
+          <u-button @click="state.isShowPopup = false" type="default">暂不升级</u-button>
+          <u-button @click="onStartDownload" type="success">立即更新</u-button>
+        </view>
+      </view>
+    </u-popup>
+  </view>
+</template>
+
+<script>
+import { customPushy as pushy } from '@/utils/pushy/index'
+import yJsonView from '@/components/y-json-view/y-json-view'
+export default {
+  name: 'Custom',
+  components: {
+    yJsonView,
+  },
+  data() {
+    return {
+      appInfo: {},
+      appInfoJson: {},
+      apiInfo: {},
+      state: {
+        isShowPopup: false,
+      },
+    }
+  },
+  methods: {
+    async onGetUpdate(manual) {
+      const res = await pushy.getUpdate(manual)
+      if(res.statusCode === 252 || res.statusCode === 251){
+        // 252：需要更新 wgt 版本 251：需要更新原生版本
+        this.apiInfo = res.data
+        console.log(res.data);
+      } 
+      
+      this.appInfoJson = res
+      
+      console.log(res.message);
+
+      // uni.showToast({
+      //   title: res.message,
+      // })
+    },
+
+    async onGetInfo() {
+      const appInfo = await pushy.getInfo()
+      this.appInfo = appInfo
+      this.appInfoJson = appInfo
+      uni.showToast({
+        title: '获取信息成功',
+      })
+    },
+    
+    // 启动下载
+    async onStartDownload(){
+      
+    }
+  },
+  onLoad() {
+    pushy.on('onInitSuccess', () => {
+      console.log('onInitSuccess>>>')
+    })
+    pushy.on('onInitFail', () => {
+      console.log('onInitFail>>>')
+    })
+    pushy.on('onStartGetUpdate', () => {
+      console.log('onStartGetUpdate>>>')
+    })
+    pushy.on('onNativeUpdateRequired', () => {
+      console.log('onNativeUpdateRequired>>>')
+      this.state.isShowPopup = true
+    })
+    pushy.on('onWgtUpdateRequired', () => {
+      console.log('onWgtUpdateRequired>>>')
+      this.state.isShowPopup = true
+    })
+    pushy.on('onNoUpdate', () => {
+      console.log('onNoUpdate>>>')
+    })
+    pushy.on('onUpdateRequestFalse', () => {
+      console.log('onUpdateRequestFalse>>>')
+    })
+    pushy.on('onUpdateRequestFail', () => {
+      console.log('onUpdateRequestFail>>>')
+    })
+    pushy.on('onUpdateRequestFailUnknown', () => {
+      console.log('onUpdateRequestFailUnknown>>>')
+    })
+    
+    this.onGetInfo()
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+$padding: 15px;
+.page {
+  padding: $padding;
+
+  .item {
+    box-sizing: border-box;
+    height: 44px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .label {
+      color: #333;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .value {
+      font-size: 16px;
+      color: #666;
+    }
+  }
+  .btn {
+    margin-top: $padding;
+    box-sizing: border-box;
+
+    color: #fff;
+  }
+
+  .info-board {
+    box-sizing: border-box;
+    margin-top: $padding;
+    padding: $padding;
+    border-radius: 6px;
+    border: 1px solid #eee;
+  }
+  
+  .popup{
+    box-sizing: border-box;
+    width: 700rpx;
+    padding: $padding;
+    border-radius: 6px;
+    
+    .popup-button{
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+</style>
