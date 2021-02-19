@@ -448,9 +448,12 @@ export default class Pushy {
           break
 
         case 3:
-          // 静默更新
-          this.state.isSilentUpdating = true
-          this._handleUpdateSilent(res)
+          // 静默更新，只支持 wgt 静默更新
+          if (/\.wgt$/i.test(url) || platform === 'android') {
+            // 打开正在更新
+            this.state.isSilentUpdating = true
+            this._handleUpdateSilent(res)
+          }
           break
 
         default:
@@ -477,6 +480,12 @@ export default class Pushy {
       url,
       {
         filename: '_doc/update/',
+        // 数值类型，单位为s(秒)，默认值为120s。 超时时间为服务器响应请求的时间（不是下载任务完成的总时间），如果设置为0则表示永远不超时。
+        timeout: 60,
+        // 数值类型，默认为重试3次。
+        retry: 3,
+        // 下载任务重试间隔时间 数值类型，单位为s(秒)，默认值为30s。
+        retryInterval: 5,
       },
       (download, status) => {
         if (status === 200) {
@@ -684,7 +693,7 @@ export default class Pushy {
         // 数值类型，默认为重试3次。
         retry: 3,
         // 下载任务重试间隔时间 数值类型，单位为s(秒)，默认值为30s。
-        retryInterval: 30,
+        retryInterval: 5,
       },
       // 当下载任务下载完成时触发，成功或失败都会触发。
       (download, status) => {
@@ -1477,22 +1486,127 @@ export default class Pushy {
    * @name 开始下载资源，只会 resolve， 不会 reject
    * `statusCode` <Number> 状态码，执行该方法之后的结果主要根据状态码进行判断
    * 491 无下载地址
+   * 492 文件下载失败
    * `message` 	<String> 信息描述
    * `data` 		<Object> native 或者 wgt 包信息
    * `response` <Object> 原生响应对象
    * `error` 		<Error> 原生错误对象
-   * @desc 48x 用户配置
+   * @desc 49x
    * @return { Promise<object> } 包装的响应对象
    */
-  async _startDownload() {
+  async startDownload() {
+    const { platform } = this.systemInfo
+    const { forceUpdate, log } = this._config
     const { url } = this._cSourceInfo
 
     if (url) {
+      if (/\.wgt$/i.test(url) || platform === 'android') {
+        // 打开正在更新
+        this.state.isUpdating = true
+        this._cDownLoadTask = plus.downloader.createDownload(
+          url,
+          {
+            filename: '_doc/update/',
+            // 数值类型，单位为s(秒)，默认值为120s。 超时时间为服务器响应请求的时间（不是下载任务完成的总时间），如果设置为0则表示永远不超时。
+            timeout: 60,
+            // 数值类型，默认为重试3次。
+            retry: 3,
+            // 下载任务重试间隔时间 数值类型，单位为s(秒)，默认值为30s。
+            retryInterval: 5,
+          },
+          (download, status) => {
+            if (status === 200) {
+              log && this._consoleNotice({ type: 'log', title: '正在安装文件...' })
+              // 发布开始安装资源事件
+              this._emit('onStartInstall')
+              plus.runtime.install(
+                download.filename,
+                {
+                  // 是否强制安装
+                  force: forceUpdate,
+                },
+                () => {
+                  // 关闭正在更新
+                  this.state.isUpdating = false
+                  this.state.isSilentUpdated = true
+                  log && this._consoleNotice({ type: 'log', title: '应用资源更新完成!' })
+                  // 发布应用资源更新完成事件
+                  this._emit('onUpdateSuccess')
+                  this.state.isSilentUpdated = true
+                  return Promise.resolve({
+                    statusCode: 200,
+                    message: '',
+                  })
+                },
+                (e) => {
+                  // 关闭正在更新
+                  this.state.isUpdating = false
+                  plus.nativeUI.alert(`安装文件失败[${e.code}]：${e.message}`)
+                  return Promise.resolve({
+                    statusCode: 493,
+                    message: `安装文件失败[${e.code}]：${e.message}`,
+                  })
+                }
+              )
+            } else {
+              log && this._consoleNotice({ type: 'warn', title: '文件下载失败' })
+              // 关闭正在更新
+              this.state.isUpdating = false
+              return Promise.resolve({
+                statusCode: 492,
+                message: '文件下载失败',
+              })
+              // 关闭正在更新
+              // this.state.isUpdating = false
+            }
+          }
+        )
+
+        let lastProgressValue = 0
+        this._cDownLoadTask.start()
+        this._cDownLoadTask.addEventListener('statechanged', (task) => {
+          switch (task.state) {
+            case 1: // 开始
+              log && this._consoleNotice({ type: 'log', title: '准备下载...' })
+              break
+            case 2: // 已连接到服务器
+              log && this._consoleNotice({ type: 'log', title: '开始下载...' })
+              // 发布开始下载事件
+              this._emit('onStartDownload')
+              break
+            case 3:
+              // eslint-disable-next-line no-case-declarations
+              const progress = parseInt((task.downloadedSize / task.totalSize) * 100)
+              if (progress - lastProgressValue >= 2) {
+                lastProgressValue = progress
+                log && this._consoleNotice({ type: 'log', title: `已下载${progress}%` })
+                // 发布下载进度事件
+                this._emit('onDownloadProgress', {
+                  progress,
+                  downloadedSize: task.downloadedSize,
+                  totalSize: task.totalSize,
+                })
+              }
+              break
+          }
+        })
+      } else {
+        // 关闭正在更新
+        this.state.isUpdating = false
+        plus.runtime.openURL(url)
+      }
     } else {
       return Promise.resolve({
         statusCode: 491,
         message: '无下载地址',
       })
     }
+  }
+
+  /**
+   * @name 重启APP
+   */
+  restart() {
+    plus.runtime.restart()
   }
 }

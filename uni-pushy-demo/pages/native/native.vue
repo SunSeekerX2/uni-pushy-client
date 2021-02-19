@@ -54,6 +54,7 @@ export default {
       
       uni.showToast({
         title: res.message,
+        icon:'none'
       })
     },
 
@@ -63,6 +64,7 @@ export default {
       this.appInfoJson = appInfo
       uni.showToast({
         title: '获取信息成功',
+        icon:'none'
       })
     },
   },

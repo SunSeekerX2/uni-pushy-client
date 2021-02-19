@@ -3,7 +3,7 @@
  * @author: SunSeekerX
  * @Date: 2021-02-18 18:09:08
  * @LastEditors: SunSeekerX
- * @LastEditTime: 2021-02-19 17:15:15
+ * @LastEditTime: 2021-02-19 21:00:11
  */
 
 // import Pushy from '@limm/uni-pushy-client'
@@ -42,7 +42,7 @@ const customPushy = new Pushy({
   // 是否强制安装更新包
   forceUpdate: true,
   // log
-  log: true,
+  log: false,
   // log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log
   logString: false,
   // 是否使用自定义界面

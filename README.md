@@ -1,6 +1,6 @@
 # uni-pushy-client
 
-## 简介
+# 简介
 
 **Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。后续开放自定义处理更新逻辑~
 
@@ -8,9 +8,9 @@
 
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom: 33%;" />
 
-## 快速上手
+# 快速上手
 
-### **安装**
+## **安装**
 
 在你的 uni-app 项目根目录下执行：
 
@@ -18,7 +18,7 @@
 npm i @limm/uni-pushy-client
 ```
 
-### **使用**
+## **使用**
 
 `${app/src/utils/pushy/index.js}`
 
@@ -42,15 +42,38 @@ export default new Pushy({
 **constructor(options)**
 
 - `projectId` <String> `uni-pushy-admin` 创建的项目 `id` 默认: `''`
+
 - `updateUrl` <String> `uni-pushy-server` 部署可访问的地址 默认: `''`
+
 - `mainColor` <String> 主题色 默认: `'FF5B78'`
+
 - `logo` <String> 弹窗图标 url `/` 相当于**项目根目录**（**cli** 创建的项目为 **src**） 默认: `''`
+
 - `update` <Boolean> 是否打开检查更新 默认：`true`
-- 返回：更新对象
 
-## Api
+- `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
-### **检查更新 - getUpdate(manual)**
+- `log` <Boolean> 是否显示log 默认：`false`
+
+- `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
+
+- `custom` <Boolean> 是否使用自定义界面 默认：`false`
+
+  > 如果使用自定义界面需要使用事件监听进行更新处理！，对界面要求比较高的 App 可以使用。
+
+返回：更新对象
+
+
+
+## 自定义更新界面
+
+参考 `uni-pushy-demo` 示例项目。
+
+
+
+# Api
+
+## getUpdate(manual) - 检查更新
 
 **该方法通过按钮点击调用需要做防抖处理！**
 
@@ -83,7 +106,7 @@ const res = await pushy.getUpdate()
 - `response` <Object> 原生响应对象
 - `error` <Error> 原生错误对象
 
-### **获取信息 - getInfo()**
+## getInfo() - 获取信息
 
 ```javascript
 const res = await pushy.getInfo()
@@ -159,7 +182,62 @@ const res = {
 }
 ```
 
-## 最佳实践
+
+
+**下面的函数为自定义视图需要！**
+
+## on(EVENT_NAME, CALLBACK)
+
+添加事件监听
+
+- `EVENT_NAME` <String> 事件名
+- `CALLBACK` <Function> 回调函数
+
+```javascript
+pushy.on('onInitSuccess', () => {
+  console.log('onInitSuccess>>>')
+})
+```
+
+## once(EVENT_NAME, CALLBACK)
+
+添加事件监听，只执行一次
+
+- `EVENT_NAME` <String> 事件名
+- `CALLBACK` <Function> 回调函数
+
+```javascript
+pushy.on('onInitSuccess', () => {
+  console.log('onInitSuccess>>>')
+})
+```
+
+
+
+## off(EVENT_NAME, CALLBACK)
+
+取消事件监听，回调函数需要为添加监听时的**同一个对象**，**否则无法取消！**
+
+- `EVENT_NAME` <String> 事件名
+- `CALLBACK` <Function> 回调函数
+
+```javascript
+pushy.off('onInitSuccess', () => {
+  console.log('onInitSuccess>>>')
+})
+```
+
+
+
+## startDownload
+
+开始下载，需要先检查更新，并且有 wgt 或者 有原生版本更新才能调用。否则调用无效。
+
+## restart
+
+重启 App。
+
+# 最佳实践
 
 全局只创建一个 `Pushy` 对象，之后 App 的更新都使用该对象来完成。例如我们的项目：
 
@@ -217,11 +295,11 @@ export default {
 
 <img src="assets/20201103205532.png" alt="20201103205532.png" style="zoom:50%;" />
 
-### 原生包
+## 原生包
 
 首先基于现在的版本打包，选择发行 > 原生 app - 云打包 > 选择你需要的平台，打出一个原生包。打包完成上传至 uni-pushy 后台管理。
 
-### 热更新包
+## 热更新包
 
 修改 `manifest.json` 的应用版本名称，和应用版本号（版本号只能前进，相对应的版本名也需要），增加版本号，选择发行 > 原生 app - 制作应用 wgt 包 > 打出资源包，上传至 uni-pushy 后台管理。
 
@@ -229,17 +307,89 @@ export default {
 
 ## 发布订阅
 
-wip
+**onInitSuccess**
 
-## Todo
+初始化成功
+
+**onInitFail**
+
+初始化失败，不影响后续逻辑，仅仅未获取到uuid
+
+**onStartGetUpdate**
+
+开始更新
+
+**onNativeUpdateRequired**
+
+需要更新原生版本
+
+**onWgtUpdateRequired**
+
+需要更新 wgt 版本
+
+**onNoUpdate**
+
+暂无更新
+
+**onUpdateRequestFalse**
+
+请求更新接口请求成功，返回结果失败
+
+**onUpdateRequestFail**
+
+请求更新接口失败
+
+**onUpdateRequestFailUnknown**
+
+请求更新接口发生未知错误
+
+**onUpdateSuccess**
+
+更新成功
+
+**onStartDownload**
+
+开始下载
+
+**onStartInstall**
+
+开始安装
+
+**onDownloadProgress**
+
+下载进度监听
+
+回调的第一个参数为对象，包含以下属性
+
+- `progress` <Number> 当前下载进度
+- `downloadedSize` <Number> 已下载的大小
+- `totalSize` <Number> 总大小
+
+
+
+# 更新日志（Changelog）
+
+## 0.0.3 - 2021-02-19
+
+### 功能（Features）
+
+- 【重要】基于发布订阅的自定义更新界面上线。
+- 增加 `forceUpdate` 、`custom`、`logString`等更多配置。
+- 统一 debug 样式。
+- 优化代码逻辑。
+
+### Bug 修复 （Bug Fixes）
+
+- 修复后台下载更新完成还能继续更新的 bug
+- 修复后台下载更新完成不提示的 bug
+
+# Todo
 
 - 基于发布订阅的事件更新机制，用户可以随意定制界面
 - 国际化支持
 - 清除更新的缓存
 
-## 示例项目
-
-## 更新类型
+# 更新类型
 
 **静默更新**
 
