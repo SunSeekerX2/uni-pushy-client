@@ -77,6 +77,16 @@ export default new Pushy({
 
 参考 `uni-pushy-demo` 示例项目。
 
+
+
+## 测试 App
+
+安卓：[https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/__UNI__4283B46_20210219233906.apk](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/__UNI__4283B46_20210219233906.apk)
+
+![android-qrcode](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/android-qrcode.png)
+
+Ios：没有证书🤔
+
 # Api
 
 ## getUpdate(manual) - 检查更新
