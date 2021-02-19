@@ -53,7 +53,7 @@ export default new Pushy({
 
 - `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
-- `log` <Boolean> 是否显示log 默认：`false`
+- `log` <Boolean> 是否显示 log 默认：`false`
 
 - `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
 
@@ -63,13 +63,9 @@ export default new Pushy({
 
 返回：更新对象
 
-
-
 ## 自定义更新界面
 
 参考 `uni-pushy-demo` 示例项目。
-
-
 
 # Api
 
@@ -182,8 +178,6 @@ const res = {
 }
 ```
 
-
-
 **下面的函数为自定义视图需要！**
 
 ## on(EVENT_NAME, CALLBACK)
@@ -212,8 +206,6 @@ pushy.on('onInitSuccess', () => {
 })
 ```
 
-
-
 ## off(EVENT_NAME, CALLBACK)
 
 取消事件监听，回调函数需要为添加监听时的**同一个对象**，**否则无法取消！**
@@ -226,8 +218,6 @@ pushy.off('onInitSuccess', () => {
   console.log('onInitSuccess>>>')
 })
 ```
-
-
 
 ## startDownload
 
@@ -313,7 +303,7 @@ export default {
 
 **onInitFail**
 
-初始化失败，不影响后续逻辑，仅仅未获取到uuid
+初始化失败，不影响后续逻辑，仅仅未获取到 uuid
 
 **onStartGetUpdate**
 
@@ -364,8 +354,6 @@ export default {
 - `progress` <Number> 当前下载进度
 - `downloadedSize` <Number> 已下载的大小
 - `totalSize` <Number> 总大小
-
-
 
 # 更新日志（Changelog）
 
