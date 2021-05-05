@@ -3,7 +3,7 @@
  * @author: SunSeekerX
  * @Date: 2021-02-18 18:09:08
  * @LastEditors: SunSeekerX
- * @LastEditTime: 2021-02-19 21:00:11
+ * @LastEditTime: 2021-05-05 23:46:14
  */
 
 // import Pushy from '@limm/uni-pushy-client'
@@ -26,6 +26,8 @@ const pushy = new Pushy({
   log: true,
   // log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log
   logString: false,
+  // 国际化标识 en_US zh_CN
+  locale: 'en_US'
 })
 
 const customPushy = new Pushy({

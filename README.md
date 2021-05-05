@@ -89,6 +89,34 @@ Ios：没有证书🤔
 
 # Api
 
+
+
+## updateConfig(options) - 更新配置信息
+
+更新现有的配置信息，参数跟初始化相同。该方法为同步方法
+
+- `projectId` <String> `uni-pushy-admin` 创建的项目 `id` 默认: `''`
+
+- `updateUrl` <String> `uni-pushy-server` 部署可访问的地址 默认: `''`
+
+- `mainColor` <String> 主题色 默认: `'FF5B78'`
+
+- `logo` <String> 弹窗图标 url `/` 相当于**项目根目录**（**cli** 创建的项目为 **src**） 默认: `''`
+
+- `update` <Boolean> 是否打开检查更新 默认：`true`
+
+- `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
+
+- `log` <Boolean> 是否显示 log 默认：`false`
+
+- `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
+
+- `custom` <Boolean> 是否使用自定义界面 默认：`false`
+
+  > 如果使用自定义界面需要使用事件监听进行更新处理！，对界面要求比较高的 App 可以使用。
+
+返回：空
+
 ## getUpdate(manual) - 检查更新
 
 **该方法通过按钮点击调用需要做防抖处理！**
@@ -376,6 +404,13 @@ export default {
 - `totalSize` <Number> 总大小
 
 # 更新日志（Changelog）
+
+## 0.2.0 2021-05-05
+
+### 功能（Features）
+
+- 【重要】增加 `updateConfig` 更新配置方法。
+- 【重要】添加 `locale` 国际化配置，实现国际化。
 
 ## 0.0.4 - 2021-02-19
 
