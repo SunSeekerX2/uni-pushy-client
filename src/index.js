@@ -1,3 +1,5 @@
+import $t from './lang/index'
+
 export default class Pushy {
   constructor(options = {}) {
     /**
@@ -52,6 +54,8 @@ export default class Pushy {
       mainColor: 'FF5B78',
       // 是否使用自定义界面
       custom: false,
+      // 国际化标识
+      locale: 'zh_CN',
     }
 
     // 生效的配置
@@ -213,6 +217,20 @@ export default class Pushy {
   }
 
   /**
+   * 更新配置
+   */
+  updateConfig(options) {
+    this._setConfig(options)
+    const { log, locale } = this._config
+    log &&
+      this._consoleNotice({
+        type: 'log',
+        title: $t(locale, 'console_config_update_success'),
+        message: info,
+      })
+  }
+
+  /**
    * 获取系统信息
    */
   async getInfo() {
@@ -241,8 +259,11 @@ export default class Pushy {
       _workSetting: this._workSetting,
     }
 
+    const { log, locale } = this._config
+
     // 打印日志
-    this._config.log && this._consoleNotice({ type: 'log', title: '获取系统信息', message: info })
+    log &&
+      this._consoleNotice({ type: 'log', title: $t(locale, 'console_get_sys_info'), message: info })
     return Promise.resolve(info)
   }
 
@@ -271,7 +292,7 @@ export default class Pushy {
    * @return { Promise<object> } 包装的响应对象
    */
   async getUpdate(manual) {
-    const { custom } = this._config
+    const { custom, locale } = this._config
     // 判断是否初始化
     if (!this._isInitFinish) {
       // 没有初始化进行初始化
@@ -282,60 +303,60 @@ export default class Pushy {
       // 判断是否正在检查更新
       return Promise.resolve({
         statusCode: 473,
-        message: '正在检查更新中...',
+        message: $t(locale, 'console_config_update_success'),
       })
     } else if (this.state.isSilentUpdating) {
       // 判断是否正在静默更新
       return Promise.resolve({
         statusCode: 474,
-        message: '正在静默更新中...',
+        message: $t(locale, 'is_silent_updating'),
       })
     } else if (this.state.isSilentUpdated) {
       // 判断是否已经静默更新
       return Promise.resolve({
         statusCode: 475,
-        message: '已经更新完成，需要重启App生效',
+        message: $t(locale, 'is_update_success'),
       })
     } else if (this.state.isUpdating) {
       // 判断是否正在更新
       return Promise.resolve({
         statusCode: 476,
-        message: '正在更新中...',
+        message: $t(locale, 'is_updating'),
       })
     }
-    const { update, updateUrl, projectId } = this._config
-    // 条件判断
+    const { update, updateUrl, projectId, log } = this._config
+
     if (!update) {
+      // 更新被关闭
       return Promise.resolve({
         statusCode: 451,
-        message: '更新被关闭',
+        message: $t(locale, 'notice_update_closed'),
       })
     } else if (!updateUrl) {
+      // 无检查更新地址
       return Promise.resolve({
         statusCode: 452,
-        message: '无检查更新地址',
+        message: $t(locale, 'notice_no_update_url'),
       })
     } else if (!projectId) {
+      // 无项目ID或项目ID不正确
       return Promise.resolve({
         statusCode: 453,
-        message: '无项目ID或项目ID不正确',
+        message: $t(locale, 'notice_no_project_id'),
       })
     }
 
     // 打开正在检查更新
     this.state.isGettingUpdate = true
-
     // 发布 onStartGetUpdate - 开始检查更新
     this._emit('onStartGetUpdate')
     // 网络请求
     const res = await this._onRequestUpdate()
-    // 关闭正在检查更新
-    // this.state.isGettingUpdate = false
     // 日志提示
-    this._config.log &&
+    log &&
       this._consoleNotice({
         type: 'log',
-        title: '接口响应',
+        title: $t(locale, 'console_api_response'),
         message: res.response,
       })
     // 根据 statusCode 处理结果
@@ -382,18 +403,23 @@ export default class Pushy {
         break
       // return Promise.resolve(res)
       default:
-        this._consoleNotice({ type: 'error', title: '发生未知错误', message: res })
+        this._consoleNotice({
+          type: 'error',
+          title: $t(locale, 'console_unknown_error'),
+          message: res,
+        })
         // 发布更新请求未知事件
         this._emit('onUpdateRequestFailUnknown', res)
         // 关闭正在检查更新
         this.state.isGettingUpdate = false
         return Promise.resolve({
           statusCode: 505,
-          message: '未知错误',
+          message: $t(locale, 'console_unknown_error'),
         })
     }
     // 关闭正在检查更新
     this.state.isGettingUpdate = false
+    // 回调结果
     return Promise.resolve(res)
   }
 
@@ -401,6 +427,7 @@ export default class Pushy {
    * @name 启动更新，支持wgt更新，原生更新，静默更新
    */
   async _startUpdate(res, manual) {
+    const { locale } = this._config
     const { platform } = this.systemInfo
     // updateType 更新类型（1：用户同意更新，2：强制更新，3：静默更新）
     const { url, updateType } = res
@@ -457,7 +484,11 @@ export default class Pushy {
           break
 
         default:
-          this._consoleNotice({ type: 'error', title: '不支持的更新方法', message: res })
+          this._consoleNotice({
+            type: 'error',
+            title: $t(locale, 'console_update_type_not_support'),
+            message: res,
+          })
           break
       }
     }
@@ -467,7 +498,7 @@ export default class Pushy {
    * @name 下载文件，并更新
    */
   _startDownloadAndUpdate(res) {
-    const { forceUpdate, log } = this._config
+    const { forceUpdate, log, locale } = this._config
     const { url } = res
 
     const popupData = {
@@ -489,10 +520,14 @@ export default class Pushy {
       },
       (download, status) => {
         if (status === 200) {
-          log && this._consoleNotice({ type: 'log', title: '正在安装文件...' })
+          log &&
+            this._consoleNotice({
+              type: 'log',
+              title: $t(locale, 'console_is_install'),
+            })
           popupObj.change({
             progressValue: 100,
-            progressTip: '正在安装文件...',
+            progressTip: $t(locale, 'console_is_install'),
             progress: true,
             buttonNum: 0,
           })
@@ -506,9 +541,10 @@ export default class Pushy {
               // 关闭正在更新
               this.state.isUpdating = false
               this.state.isSilentUpdated = true
-              log && this._consoleNotice({ type: 'log', title: '应用资源更新完成!' })
+              log &&
+                this._consoleNotice({ type: 'log', title: $t(locale, 'console_install_success') })
               popupObj.change({
-                contentText: '应用资源更新完成!',
+                contentText: $t(locale, 'console_install_success'),
                 buttonNum: 1,
                 progress: false,
               })
@@ -518,16 +554,17 @@ export default class Pushy {
               // 关闭正在更新
               this.state.isUpdating = false
               popupObj.cancel()
-              plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
+              // plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
+              plus.nativeUI.alert(`${$t(locale, 'notice_install_fail')}[${e.code}]：${e.message}`)
             }
           )
         } else {
           popupObj.change({
-            contentText: '文件下载失败!',
+            contentText: $t(locale, 'console_download_fail'),
             buttonNum: 1,
             progress: false,
           })
-          log && this._consoleNotice({ type: 'warn', title: '文件下载失败' })
+          log && this._consoleNotice({ type: 'warn', title: $t(locale, 'console_download_fail') })
           // 关闭正在更新
           this.state.isUpdating = false
         }
@@ -537,18 +574,18 @@ export default class Pushy {
     downloadTask.addEventListener('statechanged', (task, status) => {
       switch (task.state) {
         case 1: // 开始
-          log && this._consoleNotice({ type: 'log', title: '准备下载...' })
+          log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_prepare_download') })
           popupObj.change({
             progressValue: 0,
-            progressTip: '准备下载...',
+            progressTip: $t(locale, 'console_prepare_download'),
             progress: true,
           })
           break
         case 2: // 已连接到服务器
-          log && this._consoleNotice({ type: 'log', title: '开始下载...' })
+          log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_downloading') })
           popupObj.change({
             progressValue: 0,
-            progressTip: '开始下载...',
+            progressTip: $t(locale, 'console_downloading'),
             progress: true,
           })
           break
@@ -557,10 +594,14 @@ export default class Pushy {
           const progress = parseInt((task.downloadedSize / task.totalSize) * 100)
           if (progress - lastProgressValue >= 2) {
             lastProgressValue = progress
-            log && this._consoleNotice({ type: 'log', title: `已下载${progress}%` })
+            log &&
+              this._consoleNotice({
+                type: 'log',
+                title: `${$t(locale, 'console_has_downloaded')}${progress}%`,
+              })
             popupObj.change({
               progressValue: progress,
-              progressTip: `已下载${progress}%`,
+              progressTip: `${$t(locale, 'console_has_downloaded')}${progress}%`,
               progress: true,
             })
           }
@@ -572,16 +613,8 @@ export default class Pushy {
       // 关闭正在更新
       this.state.isUpdating = false
       downloadTask && downloadTask.abort()
-      log && this._consoleNotice({ type: 'log', title: '用户手动取消下载' })
-      uni.showToast({
-        title: '已取消下载',
-        icon: 'none',
-      })
+      log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_download_cancel') })
     }
-    // 重启APP
-    // popupObj.reboot = () => {
-    //   plus.runtime.restart()
-    // }
   }
 
   /**
@@ -610,11 +643,11 @@ export default class Pushy {
   async _onRequestUpdate() {
     return new Promise((resolve) => {
       const { platform } = this.systemInfo
-      const { updateUrl, projectId, log } = this._config
+      const { updateUrl, projectId, log, locale } = this._config
 
       const { wgtVersion, wgtVersionCode, nativeVersion, nativeVersionCode, systemInfo } = this
 
-      log && this._consoleNotice({ type: 'log', title: '开始检查更新...' })
+      log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_start_request_update') })
 
       uni.request({
         url: `${updateUrl}/api/update`,
@@ -636,7 +669,8 @@ export default class Pushy {
               resolve({
                 statusCode: 251,
                 data: native,
-                message: '需要更新原生版本',
+                // 需要更新原生版本
+                message: $t(locale, 'notice_native_update_required'),
                 response: data,
               })
             } else if (
@@ -647,20 +681,24 @@ export default class Pushy {
               resolve({
                 statusCode: 252,
                 data: wgt,
-                message: '需要更新wgt版本',
+                // 需要更新wgt版本
+                message: $t(locale, 'notice_wgt_update_required'),
                 response: data,
               })
             } else {
               resolve({
                 statusCode: 253,
-                message: '暂无更新',
+                // 暂无更新
+                message: $t(locale, 'notice_no_update'),
                 response: data,
               })
             }
           } else {
             resolve({
               statusCode: 254,
-              message: data.message,
+              // message: data.message,
+              // Api 请求失败
+              message: $t(locale, 'notice_api_fail'),
               response: data,
             })
           }
@@ -668,7 +706,8 @@ export default class Pushy {
         fail: (e) => {
           resolve({
             statusCode: 500,
-            message: e.message,
+            // Api 请求错误
+            message: $t(locale, 'notice_api_error'),
             error: e,
           })
         },
@@ -681,6 +720,7 @@ export default class Pushy {
    */
   async _handleUpdateSilent(res) {
     const { url } = res
+    const { log, locale, forceUpdate } = this._config
 
     // 创建下载对象
     const downloadTask = plus.downloader.createDownload(
@@ -702,16 +742,27 @@ export default class Pushy {
             download.filename,
             {
               // 是否强制安装
-              force: this._config.forceUpdate,
+              force: forceUpdate,
             },
             () => {
               this.state.isSilentUpdating = false
               this.state.isSilentUpdated = true
-              this._config.log && this._consoleNotice({ type: 'log', title: '静默更新完成' })
+              // 静默更新完成
+              log &&
+                this._consoleNotice({
+                  type: 'log',
+                  title: $t(locale, 'console_silent_update_success'),
+                })
             },
             (e) => {
               this.state.isSilentUpdating = false
-              plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
+              // 安装文件失败
+              log &&
+                this._consoleNotice({
+                  type: 'log',
+                  title: `${$t(locale, 'console_silent_update_success')}[${e.code}]：${e.message}`,
+                })
+              // plus.nativeUI.alert('安装文件失败[' + e.code + ']：' + e.message)
             }
           )
         } else {
@@ -728,28 +779,35 @@ export default class Pushy {
       switch (download.state) {
         case 1:
           // 开始
-          this._config.log && this._consoleNotice({ type: 'log', title: '下载任务开始请求' })
+          // 下载任务开始请求
+          log &&
+            this._consoleNotice({ type: 'log', title: $t(locale, 'console_download_task_request') })
           break
         case 2:
           // 已连接到服务器
-          this._config.log &&
+          // 下载任务网络连接已建立，服务器返回响应，准备传输数据内容
+          log &&
             this._consoleNotice({
               type: 'log',
-              title: '下载任务网络连接已建立，服务器返回响应，准备传输数据内容。',
+              title: $t(locale, 'console_download_task_connected'),
             })
           break
         case 3:
           // 下载中...
-          // const progress = parseInt(
-          //   (download.downloadedSize / download.totalSize) * 100,
-          // )
+          // 已下载
+          const progress = parseInt((download.downloadedSize / download.totalSize) * 100)
+          log &&
+            this._consoleNotice({
+              type: 'log',
+              title: `${$t(locale, 'console_downloading')}${progress}%`,
+            })
           break
         case 4:
           // 下载任务已完成
           this._config.log &&
             this._consoleNotice({
               type: 'log',
-              title: '下载任务已完成',
+              title: $t(locale, 'console_download_task_success'),
             })
           break
       }
@@ -757,10 +815,10 @@ export default class Pushy {
   }
 
   // 关闭正在更新
-  _onCloseIsUpdating() {
-    // 关闭正在更新
-    this.state.isUpdating = false
-  }
+  // _onCloseIsUpdating() {
+  //   // 关闭正在更新
+  //   this.state.isUpdating = false
+  // }
 
   // 文字换行
   _drawText(text, maxWidth) {
@@ -858,7 +916,7 @@ export default class Pushy {
 
   // 是否更新弹窗
   _updatePopup(res, callback) {
-    const { logo, mainColor } = this._config
+    const { logo, mainColor, locale } = this._config
     const { version, changelog } = res
     // 弹窗遮罩层
     const maskLayer = new plus.nativeObj.View('maskLayer', {
@@ -903,7 +961,7 @@ export default class Pushy {
       {
         tag: 'font',
         id: 'title',
-        text: `发现新版本${version}`,
+        text: `${$t(locale, 'notice_on_new_version')}${version}`,
         textStyles: {
           size: '18px',
           color: '#333',
@@ -998,7 +1056,7 @@ export default class Pushy {
     popupViewContentList.push({
       tag: 'font',
       id: 'cancelText',
-      text: '暂不升级',
+      text: $t(locale, 'notice_no_update_now'),
       textStyles: {
         size: '14px',
         color: '#666',
@@ -1015,7 +1073,7 @@ export default class Pushy {
     popupViewContentList.push({
       tag: 'font',
       id: 'confirmText',
-      text: '立即升级',
+      text: $t(locale, 'notice_update_now'),
       textStyles: {
         size: '14px',
         color: '#FFF',
@@ -1065,7 +1123,7 @@ export default class Pushy {
 
   // 文件下载的弹窗绘图
   _downloadPopupDrawing(data) {
-    const { mainColor, log } = this._config
+    const { mainColor, log, locale } = this._config
     // 以下为计算菜单的 native view 绘制布局，为固定算法，使用者无关关心
     const screenWidth = plus.screen.resolutionWidth
     const screenHeight = plus.screen.resolutionHeight
@@ -1077,9 +1135,11 @@ export default class Pushy {
     const viewContentWidth = popupViewWidth - viewContentPadding * 2
     // 弹窗容器高度
     let popupViewHeight = viewContentPadding * 3 + 60
-    log && this._consoleNotice({ type: 'log', title: '准备下载...' })
-    const progressTip = data.progressTip || '准备下载...'
-    const contentText = data.contentText || '正在为您更新，请耐心等待'
+    // 准备下载...
+    log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_prepare_download') })
+    const progressTip = data.progressTip || $t(locale, 'console_prepare_download')
+    // 正在为您更新，请耐心等待
+    const contentText = data.contentText || $t(locale, 'notice_updating')
 
     let elementList = [
       {
@@ -1092,7 +1152,7 @@ export default class Pushy {
       {
         tag: 'font',
         id: 'title',
-        text: '升级APP',
+        text: $t(locale, 'notice_update_app'),
         textStyles: {
           size: '16px',
           color: '#333',
@@ -1189,7 +1249,8 @@ export default class Pushy {
         {
           tag: 'font',
           id: 'cancelText',
-          text: '取消下载',
+          // 取消下载
+          text: $t(locale, 'notice_update_cancel'),
           textStyles: {
             size: '14px',
             color: '#666',
@@ -1206,7 +1267,7 @@ export default class Pushy {
         {
           tag: 'font',
           id: 'confirmText',
-          text: '后台下载',
+          text: $t(locale, 'notice_update_cancel'),
           textStyles: {
             size: '14px',
             color: '#FFF',
@@ -1241,7 +1302,7 @@ export default class Pushy {
         {
           tag: 'font',
           id: 'confirmText',
-          text: '关闭',
+          text: $t(locale, 'notice_update_close'),
           textStyles: {
             size: '14px',
             color: '#FFF',
@@ -1446,6 +1507,7 @@ export default class Pushy {
 
   // 控制台提示
   _consoleNotice({ type, title, message = '' }) {
+    const { locale } = this._config
     const label = `🔨🔨🔨 Uni-pushy：${title} >>>>>>`
     const msg = this._config.logString ? JSON.stringify(message) : message
     switch (type) {
@@ -1459,24 +1521,24 @@ export default class Pushy {
         console.error(label, msg)
         break
       default:
-        console.error(label, '无效的控制台提示类型!')
+        console.error(label, $t(locale, 'console_invalid_console_type'))
         break
     }
   }
 
   // Toast 提示
-  _toast(msg, options) {
-    uni.showToast(
-      Object.assign(
-        {
-          icon: 'none',
-          title: msg,
-          duration: 2000,
-        },
-        options
-      )
-    )
-  }
+  // _toast(msg, options) {
+  //   uni.showToast(
+  //     Object.assign(
+  //       {
+  //         icon: 'none',
+  //         title: msg,
+  //         duration: 2000,
+  //       },
+  //       options
+  //     )
+  //   )
+  // }
 
   /**
    * @name 自定义界面相关方法
@@ -1496,7 +1558,7 @@ export default class Pushy {
    */
   async startDownload() {
     const { platform } = this.systemInfo
-    const { forceUpdate, log } = this._config
+    const { forceUpdate, log, locale } = this._config
     const { url } = this._cSourceInfo
 
     if (url) {
@@ -1516,7 +1578,8 @@ export default class Pushy {
           },
           (download, status) => {
             if (status === 200) {
-              log && this._consoleNotice({ type: 'log', title: '正在安装文件...' })
+              // 正在安装文件...
+              log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_is_install') })
               // 发布开始安装资源事件
               this._emit('onStartInstall')
               plus.runtime.install(
@@ -1529,7 +1592,12 @@ export default class Pushy {
                   // 关闭正在更新
                   this.state.isUpdating = false
                   this.state.isSilentUpdated = true
-                  log && this._consoleNotice({ type: 'log', title: '应用资源更新完成!' })
+                  // 应用资源更新完成!
+                  log &&
+                    this._consoleNotice({
+                      type: 'log',
+                      title: $t(locale, 'console_install_success'),
+                    })
                   // 发布应用资源更新完成事件
                   this._emit('onUpdateSuccess')
                   this.state.isSilentUpdated = true
@@ -1541,23 +1609,26 @@ export default class Pushy {
                 (e) => {
                   // 关闭正在更新
                   this.state.isUpdating = false
-                  plus.nativeUI.alert(`安装文件失败[${e.code}]：${e.message}`)
+                  // 安装文件失败
+                  plus.nativeUI.alert(
+                    `${$t(locale, 'notice_install_fail')}[${e.code}]：${e.message}`
+                  )
                   return Promise.resolve({
                     statusCode: 493,
-                    message: `安装文件失败[${e.code}]：${e.message}`,
+                    message: `${$t(locale, 'notice_install_fail')}[${e.code}]：${e.message}`,
                   })
                 }
               )
             } else {
-              log && this._consoleNotice({ type: 'warn', title: '文件下载失败' })
+              // 文件下载失败!
+              log &&
+                this._consoleNotice({ type: 'warn', title: $t(locale, 'console_download_fail') })
               // 关闭正在更新
               this.state.isUpdating = false
               return Promise.resolve({
                 statusCode: 492,
-                message: '文件下载失败',
+                message: $t(locale, 'console_download_fail'),
               })
-              // 关闭正在更新
-              // this.state.isUpdating = false
             }
           }
         )
@@ -1566,11 +1637,16 @@ export default class Pushy {
         this._cDownLoadTask.start()
         this._cDownLoadTask.addEventListener('statechanged', (task) => {
           switch (task.state) {
-            case 1: // 开始
-              log && this._consoleNotice({ type: 'log', title: '准备下载...' })
+            case 1:
+              // 开始
+              // 准备下载...
+              log &&
+                this._consoleNotice({ type: 'log', title: $t(locale, 'console_prepare_download') })
               break
-            case 2: // 已连接到服务器
-              log && this._consoleNotice({ type: 'log', title: '开始下载...' })
+            case 2:
+              // 已连接到服务器
+              // 开始下载...
+              log && this._consoleNotice({ type: 'log', title: $t(locale, 'console_downloading') })
               // 发布开始下载事件
               this._emit('onStartDownload')
               break
@@ -1579,7 +1655,12 @@ export default class Pushy {
               const progress = parseInt((task.downloadedSize / task.totalSize) * 100)
               if (progress - lastProgressValue >= 2) {
                 lastProgressValue = progress
-                log && this._consoleNotice({ type: 'log', title: `已下载${progress}%` })
+                // 已下载
+                log &&
+                  this._consoleNotice({
+                    type: 'log',
+                    title: `${$t(locale, 'console_has_downloaded')}${progress}%`,
+                  })
                 // 发布下载进度事件
                 this._emit('onDownloadProgress', {
                   progress,
@@ -1596,9 +1677,10 @@ export default class Pushy {
         plus.runtime.openURL(url)
       }
     } else {
+      // 无下载地址
       return Promise.resolve({
         statusCode: 491,
-        message: '无下载地址',
+        message:  $t(locale, 'notice_no_download_url'),
       })
     }
   }

@@ -2,7 +2,7 @@
   "name": "@limm/uni-pushy-client",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "gc": "git add -A && git-cz && git pull && git push",
