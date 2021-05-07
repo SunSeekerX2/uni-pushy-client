@@ -18,10 +18,16 @@
         <text class="value">{{ appInfo.wgtVersionCode }}</text>
       </view>
     </view>
-
+    <button @click="onUpdateConfig" class="btn" style="background-color: #999999;"
+      >切换语言 当前：{{ locale }}</button
+    >
     <button @click="onGetInfo" class="btn" style="background-color: #999999;">获取信息</button>
-    <button @click="() => onGetUpdate()" class="btn" style="background-color: #dd524d;">检查更新</button>
-    <button @click="() => onGetUpdate(true)" class="btn" style="background-color: #dd524d;">检查更新(手动)</button>
+    <button @click="() => onGetUpdate()" class="btn" style="background-color: #dd524d;"
+      >检查更新</button
+    >
+    <button @click="() => onGetUpdate(true)" class="btn" style="background-color: #dd524d;"
+      >检查更新(手动)</button
+    >
 
     <!-- <view class="info-board" style="color: #007AFF;">
       {{ appInfoString }}
@@ -41,8 +47,17 @@ export default {
   components: {
     yJsonView,
   },
+  watch: {
+    locale(newVal) {
+      pushy.updateConfig({
+        locale: newVal,
+      })
+    },
+  },
   data() {
     return {
+      // en_US zh_CN
+      locale: 'en_US',
       appInfo: {},
       appInfoJson: {},
     }
@@ -51,11 +66,20 @@ export default {
     async onGetUpdate(manual) {
       const res = await pushy.getUpdate(manual)
       this.appInfoJson = res
-      
+
       uni.showToast({
         title: res.message,
-        icon:'none'
+        icon: 'none',
       })
+    },
+
+    // 更新语言
+    onUpdateConfig() {
+      if (this.locale === 'en_US') {
+        this.locale = 'zh_CN'
+      } else {
+        this.locale = 'en_US'
+      }
     },
 
     async onGetInfo() {
@@ -64,7 +88,7 @@ export default {
       this.appInfoJson = appInfo
       uni.showToast({
         title: '获取信息成功',
-        icon:'none'
+        icon: 'none',
       })
     },
   },

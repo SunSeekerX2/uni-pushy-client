@@ -69,6 +69,8 @@ export default new Pushy({
 
 - `custom` <Boolean> 是否使用自定义界面 默认：`false`
 
+- `locale` <String> 国际化标识，可选 `en_US`，`zh_CN`，默认：`zh_CN`
+
   > 如果使用自定义界面需要使用事件监听进行更新处理！，对界面要求比较高的 App 可以使用。
 
 返回：更新对象
@@ -81,11 +83,15 @@ export default new Pushy({
 
 ## 测试 App
 
-安卓：[https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/__UNI__4283B46_20210219233906.apk](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/__UNI__4283B46_20210219233906.apk)
+### Android
 
-![android-qrcode](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/android-qrcode.png)
+[https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk)
 
-Ios：没有证书🤔
+![android-qrcode](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.png)
+
+### Ios
+
+**没有证书**🤔，已经在公司项目使用可以用的。🙏🙏🙏
 
 # Api
 
@@ -112,6 +118,8 @@ Ios：没有证书🤔
 - `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
 
 - `custom` <Boolean> 是否使用自定义界面 默认：`false`
+
+- `locale` <String> 国际化标识，可选 `en_US`，`zh_CN`，默认：`zh_CN`
 
   > 如果使用自定义界面需要使用事件监听进行更新处理！，对界面要求比较高的 App 可以使用。
 

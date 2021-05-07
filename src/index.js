@@ -226,7 +226,6 @@ export default class Pushy {
       this._consoleNotice({
         type: 'log',
         title: $t(locale, 'console_config_update_success'),
-        message: info,
       })
   }
 
