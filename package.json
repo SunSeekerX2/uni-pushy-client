@@ -14,7 +14,7 @@
     "url": "git+https://github.com/SunSeekerX/uni-pushy-client.git"
   },
   "files": [
-    "index.js"
+    "src/"
   ],
   "keywords": [],
   "author": "",
