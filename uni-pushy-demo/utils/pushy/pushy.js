@@ -1,3 +1,11 @@
+/**
+ * pushy
+ * @author: SunSeekerX
+ * @Date: 2021-08-06 14:44:35
+ * @LastEditors: SunSeekerX
+ * @LastEditTime: 2021-08-06 15:04:29
+ */
+
 import $t from './lang/index'
 
 export default class Pushy {
@@ -1524,20 +1532,6 @@ export default class Pushy {
         break
     }
   }
-
-  // Toast 提示
-  // _toast(msg, options) {
-  //   uni.showToast(
-  //     Object.assign(
-  //       {
-  //         icon: 'none',
-  //         title: msg,
-  //         duration: 2000,
-  //       },
-  //       options
-  //     )
-  //   )
-  // }
 
   /**
    * @name 自定义界面相关方法
