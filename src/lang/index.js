@@ -1,9 +1,9 @@
 /**
- * @name: 国际化
+ * 国际化
  * @author: SunSeekerX
  * @Date: 2021-05-05 22:13:25
  * @LastEditors: SunSeekerX
- * @LastEditTime: 2021-05-05 22:15:53
+ * @LastEditTime: 2021-08-10 21:50:27
  */
 
 import en_US from './en_US'

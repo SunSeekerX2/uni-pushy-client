@@ -2,7 +2,7 @@
 
 ## 📌 简介
 
-<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom: 33%;" />
+<img src="https://static.yoouu.cn/imgs/2021/pic-go/20201103205532.png" style="zoom: 33%;" />
 
 **Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。
 
@@ -14,9 +14,9 @@
 
 **配套前端**：**[uni-pushy-admin](https://github.com/SunSeekerX/uni-pushy-admin)**
 
-![](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20210219232321.png)
+![](https://static.yoouu.cn/imgs/2021/pic-go/20210219232321.png)
 
-![](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20210219232048.png)
+![](https://static.yoouu.cn/imgs/2021/pic-go/20210219232048.png)
 
 ## 📌 快速上手
 
@@ -56,8 +56,6 @@ export default new Pushy({
   mainColor: '722ed1',
   // logo
   logo: '/static/images/update/ic_ar.png',
-  // 是否打开检查更新
-  update: true,
 })
 ```
 
@@ -67,11 +65,9 @@ export default new Pushy({
 
 - `updateUrl` <String> `uni-pushy-server` 部署可访问的地址 默认: `''`
 
-- `mainColor` <String> 主题色 默认: `'FF5B78'`
+- `mainColor` <String> 主题色 默认: `'#FF5B78'`
 
 - `logo` <String> 弹窗图标 url `/` 相当于**项目根目录**（**cli** 创建的项目为 **src**） 默认: `''`
-
-- `update` <Boolean> 是否打开检查更新 默认：`true`
 
 - `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
@@ -95,17 +91,17 @@ export default new Pushy({
 
 #### Android
 
-[https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk)
+[https://static.yoouu.cn/binary/apk/__UNI__4283B46_0810230610.apk](https://static.yoouu.cn/binary/apk/__UNI__4283B46_0810230610.apk)
 
-![android-qrcode](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.png)
+![image-20210810230944788](https://static.yoouu.cn/imgs/2021/pic-go/image-20210810230944788.png)
 
 #### Ios
 
-**没有证书**🤔，已经在公司项目使用可以用的。🙏🙏🙏
+**没有证书**🤔，已经在公司项目使用。🙏🙏🙏
 
 ## 📌 Api
 
-### updateConfig(options) - 更新配置信息
+### updateConfig(options): void
 
 更新现有的配置信息，参数跟初始化相同。该方法为同步方法
 
@@ -133,46 +129,38 @@ export default new Pushy({
 
 返回：空
 
-### getUpdate(manual) - 检查更新
+### getUpdate(manual): Promise<result\>
+
+检查更新。
 
 **该方法通过按钮点击调用需要做防抖处理！**
 
-- `manual` <Boolean | null> 是否手动触发
-
-```javascript
-const res = await pushy.getUpdate()
-```
-
-**pushy.getUpdate() : Promise<result>**
-
 该方法只会 **resolve**，参数为包装过后的结果对象
 
-- `statusCode` <Number> 状态码，执行该方法之后的结果主要根据状态码进行判断
-  - `251` 需要更新原生版本 附带 `data`、`response`
-  - `252` 需要更新 wgt 版本 附带：`message`、`data`、 `response`
-  - `253` 暂无更新 附带：`message`、`response`
-  - `254` 请求成功，但接口响应返回失败 附带： `message`， `response`
-  - `451` 更新被关闭，用户手动配置关闭了 附带： `message`
-  - `452` 用户未配置更新地址 附带： `message`
-  - `453` 无项目 ID 或项目 ID 不正确 附带： `message`
-  - `473` 正在检查更新 附带： `message`
-  - `474` 正在静默更新 附带： `message`
-  - `475` 已经更新完成，需要重启 App 生效 附带： `message`
-  - `476` 正在更新中... 附带：`message`
-  - `500` 请求失败 附带： `message`、`error`
-  - `505` 未知错误
-- `message` <String> 信息描述
-- `data` <Object> native 或者 wgt 包信息
-- `response` <Object> 原生响应对象
-- `error` <Error> 原生错误对象
+- `manual` <Boolean>|<null> 是否手动触发更新
+- `result` <Object> 返回结果对象
+  - `statusCode` <Number> 状态码，执行该方法之后的结果主要根据状态码进行判断
+    - `251` 需要更新原生版本 附带 `data`、`response`
+    - `252` 需要更新 wgt 版本 附带：`message`、`data`、 `response`
+    - `253` 暂无更新 附带：`message`、`response`
+    - `254` 请求成功，但接口响应返回失败 附带： `message`， `response`
+    - `451` 更新被关闭，用户手动配置关闭了 附带： `message`
+    - `452` 用户未配置更新地址 附带： `message`
+    - `453` 无项目 ID 或项目 ID 不正确 附带： `message`
+    - `473` 正在检查更新 附带： `message`
+    - `474` 正在静默更新 附带： `message`
+    - `475` 已经更新完成，需要重启 App 生效 附带： `message`
+    - `476` 正在更新中... 附带：`message`
+    - `500` 请求失败 附带： `message`、`error`
+    - `505` 未知错误
+  - `message` <String> 信息描述
+  - `data` <Object> native 或者 wgt 包信息
+  - `response` <Object> 原生响应对象
+  - `error` <Error> 原生错误对象
 
-### getInfo() - 获取信息
+### getInfo(): Promise<result\>
 
-```javascript
-const res = await pushy.getInfo()
-```
-
-**pushy.getInfo() : Promise<result>**
+获取系统信息。
 
 该方法只会 **resolve**，返回属性
 
@@ -221,6 +209,7 @@ const res = {
       bottom: 0,
       left: 0,
     },
+    // 不一定能返回
     uuid: '865166023573440',
   },
   // 个人配置
@@ -295,7 +284,7 @@ pushy.off('onInitSuccess', () => {
 
 全局只创建一个 `Pushy` 对象，之后 App 的更新都使用该对象来完成。例如我们的项目：
 
-`${app/src/utils/pushy/index`
+`app/src/utils/pushy/index`
 
 ```javascript
 import config from '@/config/index'
@@ -317,7 +306,7 @@ export default new Pushy({
 
 在 `App.vue` 的 `onLaunch` 中检查更新一次即可。就是这么简单。
 
-`${app/src/App.vue`
+`app/src/App.vue`
 
 ```javascript
 // #ifdef APP-PLUS
@@ -347,7 +336,7 @@ export default {
 
 如果有更新就会弹出更新框了，当然这是后台配置的。
 
-<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom:50%;" />
+<img src="https://static.yoouu.cn/imgs/2021/pic-go/20201103205532.png" style="zoom: 33%;" />
 
 ### 原生包
 
@@ -364,10 +353,6 @@ export default {
 **onInitSuccess**
 
 初始化成功
-
-**onInitFail**
-
-初始化失败，不影响后续逻辑，仅仅未获取到 uuid
 
 **onStartGetUpdate**
 
@@ -425,12 +410,14 @@ export default {
 
 ### 功能（Features）
 
-1. 文档微调
-2. 【重要】初始化参数 `log` 变更为 `isDebug`
+1. 【重要】初始化参数 `log` 变更为 `isDebug`
+2. 【重要】移除 `update` 配置
+3. 移除 `onInitFail` 事件
 
 ### Bug 修复 （Bug Fixes）
 
-1. 修复强制更新出现两个取消下载的问题
+1. 【重要】修复偶尔获取不到 uuid 无法成功初始化的 bug
+2. 修复强制更新出现两个取消下载的问题
 
 ## 0.2.0 2021-05-05
 

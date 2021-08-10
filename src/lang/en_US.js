@@ -1,9 +1,9 @@
 /**
- * @name: 英语(美国)
+ * 英语(美国)
  * @author: SunSeekerX
  * @Date: 2021-05-05 22:13:18
  * @LastEditors: SunSeekerX
- * @LastEditTime: 2021-05-05 23:48:19
+ * @LastEditTime: 2021-08-10 21:50:21
  */
 
 export default {
@@ -35,7 +35,6 @@ export default {
   notice_update_close: 'Close',
 
   console_get_uuid_fail: 'Get uuid fail',
-  console_get_sys_info: 'Get system info',
   console_api_response: 'Api response',
   console_unknown_error: 'UnKnown error',
   console_update_type_not_support: 'Update type not support',
@@ -52,6 +51,7 @@ export default {
   console_download_task_connected: 'Download url connected',
   console_download_task_success: 'Download success',
   console_config_update_success: 'Config update success',
-  console_downloading: '',
   console_invalid_console_type: 'Invalid console type',
+  console_init_config: 'Init config',
+  console_get_info_start: 'Starting get system info',
 }

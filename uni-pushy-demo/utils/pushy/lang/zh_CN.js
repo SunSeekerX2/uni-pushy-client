@@ -1,9 +1,9 @@
 /**
- * @name: 简体中文(中国)
+ * 简体中文(中国)
  * @author: SunSeekerX
  * @Date: 2021-05-05 22:13:07
  * @LastEditors: SunSeekerX
- * @LastEditTime: 2021-05-05 23:39:07
+ * @LastEditTime: 2021-08-10 21:50:16
  */
 
 export default {
@@ -35,7 +35,6 @@ export default {
   notice_update_close: '关闭',
 
   console_get_uuid_fail: '获取设备uuid失败',
-  console_get_sys_info: '获取系统信息',
   console_api_response: '接口响应',
   console_unknown_error: '发生未知错误',
   console_update_type_not_support: '不支持的更新方法',
@@ -52,6 +51,7 @@ export default {
   console_download_task_connected: '下载任务网络连接已建立，服务器返回响应，准备传输数据内容',
   console_download_task_success: '下载任务已完成',
   console_config_update_success: '配置更新成功',
-  console_downloading: '已下载',
   console_invalid_console_type: '无效的控制台提示类型',
+  console_init_config: '初始化信息',
+  console_get_info_start: '开始获取获取系统信息',
 }
