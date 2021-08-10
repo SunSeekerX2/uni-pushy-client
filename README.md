@@ -71,7 +71,7 @@ export default new Pushy({
 
 - `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
-- `isDebug` <Boolean> 是否显示 debug 信息  默认：`false`
+- `isDebug` <Boolean> 是否显示 debug 信息 默认：`false`
 
 - `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
 
@@ -91,7 +91,7 @@ export default new Pushy({
 
 #### Android
 
-[https://static.yoouu.cn/binary/apk/__UNI__4283B46_0810230610.apk](https://static.yoouu.cn/binary/apk/__UNI__4283B46_0810230610.apk)
+[https://static.yoouu.cn/binary/apk/**UNI**4283B46_0810230610.apk](https://static.yoouu.cn/binary/apk/__UNI__4283B46_0810230610.apk)
 
 ![image-20210810230944788](https://static.yoouu.cn/imgs/2021/pic-go/image-20210810230944788.png)
 
@@ -117,7 +117,7 @@ export default new Pushy({
 
 - `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
-- `log` <Boolean> 是否显示 log 默认：`false`
+- `isDebug` <Boolean> 是否显示 debug 信息 默认：`false`
 
 - `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
 
@@ -217,14 +217,14 @@ const res = {
     projectId: '',
     update: true,
     updateUrl: 'http://10.0.0.3:8081',
-    log: false,
+    isDebug: false,
     mainColor: '722ed1',
     logo: '/static/images/update/ic_ar.png',
   },
   // 生效的配置
   _workSetting: {
     updateUrl: 'http://10.0.0.3:8081',
-    log: false,
+    isDebug: false,
     mainColor: '722ed1',
     logo: '/static/images/update/ic_ar.png',
   },
@@ -296,7 +296,7 @@ export default new Pushy({
   // 更新地址
   updateUrl: config.get('UPDATE_BASE_API'),
   // 是否打开log
-  log: config.get('UPDATE_DEBUG'),
+  isDebug: config.get('UPDATE_DEBUG'),
   // 主题色
   mainColor: '722ed1',
   // logo
@@ -439,8 +439,6 @@ export default {
 
 - 修复后台下载更新完成还能继续更新的 bug
 - 修复后台下载更新完成不提示的 bug
-
-
 
 ## 📌 Todo
 
