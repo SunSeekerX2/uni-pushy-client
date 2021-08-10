@@ -1,10 +1,10 @@
 # uni-pushy-client
 
-# 简介
+## 📌 简介
 
-<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom:50%;" />
+<img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom: 33%;" />
 
-**Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。后续开放自定义处理更新逻辑~
+**Uni-pushy** 的客户端 sdk。零依赖实现 uni-app 的热更新。非常容易集成。
 
 热更新适用于 uni-app 开发的 Android，Ios 端应用。支持 nvue， 如果不改动原生配置可以一直用热更新更新。
 
@@ -18,9 +18,9 @@
 
 ![](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20210219232048.png)
 
-# 快速上手
+## 📌 快速上手
 
-## **安装**
+### **安装**
 
 在你的 uni-app 项目根目录下执行：
 
@@ -28,13 +28,11 @@
 npm i @limm/uni-pushy-client
 ```
 
+### 配置 `vue.config.js`
 
+由于代码是用 `es6` 写的，没有进行 `Babel` 编译，需要配置下进行 `Babel` 转译。
 
-## 配置 `vue.config.js`
-
-由于代码是用 `es6` 写的，没有进行打包，需要配置下进行 `Babel` 转译。
-
-`vue.config.js`
+`app/vue.config.js`
 
 ```javascript
 module.exports = {
@@ -42,11 +40,9 @@ module.exports = {
 }
 ```
 
+### **使用**
 
-
-## **使用**
-
-`${app/src/utils/pushy/index.js}`
+`app/src/utils/pushy/index.js`
 
 ```javascript
 import Pushy from '@limm/uni-pushy-client'
@@ -79,7 +75,7 @@ export default new Pushy({
 
 - `forceUpdate` <Boolean> 是否强制安装更新包 默认：`false`
 
-- `log` <Boolean> 是否显示 log 默认：`false`
+- `isDebug` <Boolean> 是否显示 debug 信息  默认：`false`
 
 - `logString` <Boolean> log 是否转换成 string, 解决某些使用情况下无法打印对象形式的 log 默认：`true`
 
@@ -91,29 +87,25 @@ export default new Pushy({
 
 返回：更新对象
 
-## 自定义更新界面
+### 自定义更新界面
 
 参考 `uni-pushy-demo` 示例项目。
 
+### 测试 App
 
-
-## 测试 App
-
-### Android
+#### Android
 
 [https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.apk)
 
 ![android-qrcode](https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/1.0.1.png)
 
-### Ios
+#### Ios
 
 **没有证书**🤔，已经在公司项目使用可以用的。🙏🙏🙏
 
-# Api
+## 📌 Api
 
-
-
-## updateConfig(options) - 更新配置信息
+### updateConfig(options) - 更新配置信息
 
 更新现有的配置信息，参数跟初始化相同。该方法为同步方法
 
@@ -141,7 +133,7 @@ export default new Pushy({
 
 返回：空
 
-## getUpdate(manual) - 检查更新
+### getUpdate(manual) - 检查更新
 
 **该方法通过按钮点击调用需要做防抖处理！**
 
@@ -174,7 +166,7 @@ const res = await pushy.getUpdate()
 - `response` <Object> 原生响应对象
 - `error` <Error> 原生错误对象
 
-## getInfo() - 获取信息
+### getInfo() - 获取信息
 
 ```javascript
 const res = await pushy.getInfo()
@@ -252,7 +244,7 @@ const res = {
 
 **下面的函数为自定义视图需要！**
 
-## on(EVENT_NAME, CALLBACK)
+### on(EVENT_NAME, CALLBACK)
 
 添加事件监听
 
@@ -265,7 +257,7 @@ pushy.on('onInitSuccess', () => {
 })
 ```
 
-## once(EVENT_NAME, CALLBACK)
+### once(EVENT_NAME, CALLBACK)
 
 添加事件监听，只执行一次
 
@@ -278,7 +270,7 @@ pushy.on('onInitSuccess', () => {
 })
 ```
 
-## off(EVENT_NAME, CALLBACK)
+### off(EVENT_NAME, CALLBACK)
 
 取消事件监听，回调函数需要为添加监听时的**同一个对象**，**否则无法取消！**
 
@@ -291,15 +283,15 @@ pushy.off('onInitSuccess', () => {
 })
 ```
 
-## startDownload
+### startDownload
 
 开始下载，需要先检查更新，并且有 wgt 或者 有原生版本更新才能调用。否则调用无效。
 
-## restart
+### restart
 
 重启 App。
 
-# 最佳实践
+## 📌 最佳实践
 
 全局只创建一个 `Pushy` 对象，之后 App 的更新都使用该对象来完成。例如我们的项目：
 
@@ -357,17 +349,17 @@ export default {
 
 <img src="https://sunseekerx-images.oss-cn-shenzhen.aliyuncs.com/project/uni-pushy/20201103205532.png" style="zoom:50%;" />
 
-## 原生包
+### 原生包
 
 首先基于现在的版本打包，选择发行 > 原生 app - 云打包 > 选择你需要的平台，打出一个原生包。打包完成上传至 uni-pushy 后台管理。
 
-## 热更新包
+### 热更新包
 
 修改 `manifest.json` 的应用版本名称，和应用版本号（版本号只能前进，相对应的版本名也需要），增加版本号，选择发行 > 原生 app - 制作应用 wgt 包 > 打出资源包，上传至 uni-pushy 后台管理。
 
 **wgt 资源一定依赖某个原生资源！**
 
-## 发布订阅
+## 📌 发布订阅
 
 **onInitSuccess**
 
@@ -427,7 +419,18 @@ export default {
 - `downloadedSize` <Number> 已下载的大小
 - `totalSize` <Number> 总大小
 
-# 更新日志（Changelog）
+## 📌 更新日志（Changelog）
+
+## 0.3.0 2021-08-10
+
+### 功能（Features）
+
+1. 文档微调
+2. 【重要】初始化参数 `log` 变更为 `isDebug`
+
+### Bug 修复 （Bug Fixes）
+
+1. 修复强制更新出现两个取消下载的问题
 
 ## 0.2.0 2021-05-05
 
@@ -452,13 +455,13 @@ export default {
 
 
 
-# Todo
+## 📌 Todo
 
-- 基于发布订阅的事件更新机制，用户可以随意定制界面
-- 国际化支持
 - 清除更新的缓存
+- ~~国际化支持~~ 0.2.0 已经支持
+- ~~基于发布订阅的事件更新机制，用户可以随意定制界面~~ 0.0.4 已经支持
 
-# 更新类型
+## 📌 更新类型
 
 **静默更新**
 
